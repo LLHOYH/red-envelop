@@ -1,6 +1,13 @@
 import { http, createConfig } from "@wagmi/core";
 import { base, mainnet, sepolia } from "@wagmi/core/chains";
 
+
+const rpc={
+  sepolia:"https://eth-sepolia.g.alchemy.com/v2/55vbo0cjro1DAT5M7LUFs5L02lop7kGn",
+  mainnet:"https://eth-mainnet.g.alchemy.com/v2/rtT5Fs5XAU84VfkAJisY5Hfr1Ord0ci4",
+  base:"https://base-mainnet.g.alchemy.com/v2/cmESqI7lQ9VncnHhCJuTwPZrAzO9SUkR"
+}
+
 export const config = createConfig({
   chains: [mainnet, base, sepolia],
   transports: {

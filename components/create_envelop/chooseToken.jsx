@@ -4,8 +4,8 @@ import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
 
 const config = {
-  apiKey: "cmESqI7lQ9VncnHhCJuTwPZrAzO9SUkR",
-  network: Network.ETH_SEPOLIA,
+  apiKey: "RuYye8oFGB3PL753LpNmkWsXO09Cfjmb",
+  network: Network.BASE_SEPOLIA,
 };
 const alchemy = new Alchemy(config);
 

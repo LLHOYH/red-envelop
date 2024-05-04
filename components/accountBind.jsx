@@ -12,6 +12,7 @@ const AccountBind = ({ accountBinded, setAccountBinded }) => {
 
   const dummyAddress = {
     Lloyd: "0xA552c195A6eEC742B61042531fb92732F8A91D6b",
+    Dev2:"0x7030A91c6b4dC233F775260A04D4B3173B090154",
     John: "0x162bCDeEf90181676BDC0a247A1954666F8a2815",
     Seliina: "0x262bCDeEf90181676BDC0a247A1954666F8a2816",
     Christina: "0x362bCDeEf90181676BDC0a247A1954666F8a2817",

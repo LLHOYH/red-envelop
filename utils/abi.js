@@ -36,11 +36,6 @@ export const abi = [
 			},
 			{
 				"internalType": "uint256",
-				"name": "_startTime",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
 				"name": "_duration",
 				"type": "uint256"
 			},

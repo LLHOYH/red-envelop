@@ -17,7 +17,7 @@ const NavBar = () => {
       >
         Create Envelope
       </Link>
-      <WalletButton wallet="metamask" />
+      <ConnectButton />
     </nav>
   );
 };

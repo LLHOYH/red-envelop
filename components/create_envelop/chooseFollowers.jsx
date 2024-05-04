@@ -17,14 +17,13 @@ const ChooseFollowers = ({ targetAddresses, setTargetAddresses,setSteps }) => {
 
   function getAllOtherAccounts() {
     if (!account.address) return [];
-
+    
     let allAccountsDict = JSON.parse(getAllAccounts());
     if (!allAccountsDict) return;
 
     let allOtherAccounts = Object.entries(allAccountsDict).filter(
       (acc) => acc[1] !== account.address
     );
-
     return allOtherAccounts || [];
   }
 
@@ -74,7 +73,7 @@ const ChooseFollowers = ({ targetAddresses, setTargetAddresses,setSteps }) => {
         title="followerList"
         className="flex flex-col items-center justify-start w-full px-4 pt-2 border-black rounded-l-lg gap-y-2 h-full min-h-[400px] border-l-4"
       >
-        {yourFollowers.map((follower, _index) => (
+        {yourFollowers && yourFollowers.map((follower, _index) => (
           <div
             key={follower[1]}
             className="grid content-center w-full grid-cols-[60px,100px,auto,1fr]"
