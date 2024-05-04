@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
@@ -34,37 +35,44 @@ const FollowList = ({ accountBinded }) => {
     return allAccountsDict;
   }
 
-  function handleFollowersChecked([xId, address]) {
-    console.log(xId, address);
-  }
-
   return (
     <main className="flex flex-col w-full h-full px-10 border-l-2 ">
       {accountBinded && (
         <>
           <div className="flex flex-col items-start justify-start w-full">
-            <h1 className="text-2xl font-semibold">Your Following</h1>
-            {yourFollowing.map((following) => (
+            <h1 className="mb-4 text-2xl font-semibold">Your Following</h1>
+            {yourFollowing.map((following,_index) => (
               <div
-                key={following[1]}
-                className="grid grid-cols-[100px,auto] ml-4"
-              >
+              key={following[1]}
+              className="grid grid-cols-[100px,auto,1fr] h-[50px] justify-center items-center w-full gap-y-2"
+            >
+              <Image
+                src={`/${_index + 1}.png`}
+                alt={following[0]}
+                width={50}
+                height={50}
+                className=" rounded-3xl"
+              />
                 <p>{following[0]}</p>
-                <p>{following[1].substring(0, 10) + "..."}</p>
               </div>
             ))}
           </div>
 
-          <div className="flex flex-col items-start justify-start w-full mt-16">
+          <div className="flex flex-col items-start justify-start w-full mt-8">
             <h1 className="my-4 text-2xl font-semibold">Your Followers</h1>
-            {yourFollowers.map((follower) => (
+            {yourFollowers.map((follower, _index) => (
               <div
                 key={follower[1]}
-                className="grid grid-cols-[100px,auto,1fr] ml-4 w-full"
+                className="grid grid-cols-[100px,auto,1fr] h-[50px] justify-center items-center w-full gap-y-2"
               >
-                <p>{follower[0]}</p>
-                <p>{follower[1].substring(0, 10) + "..."}</p>
-                {/* <input type="checkbox" className="justify-self-end" onChange={()=>handleFollowersChecked(follower)}/> */}
+                <Image
+                  src={`/${_index + 1}.png`}
+                  alt={follower[0]}
+                  width={50}
+                  height={50}
+                  className="rounded-3xl"
+                />
+                <p className="">{follower[0]}</p>
               </div>
             ))}
           </div>

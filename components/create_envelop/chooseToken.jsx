@@ -9,9 +9,10 @@ const config = {
 };
 const alchemy = new Alchemy(config);
 
-const ChooseToken = () => {
+const ChooseToken = ({setSteps, setSelectedToken}) => {
   const account = useAccount();
   const [tokenList, setTokenList] = useState([]);
+  const [loading, setLoading] = useState(true)
   // Get token balances
   useEffect(() => {
     getTokenList();
@@ -21,15 +22,22 @@ const ChooseToken = () => {
     let tokens = await alchemy.core.getTokensForOwner(account.address);
     console.log(tokens);
     setTokenList(tokens.tokens);
+    setLoading(false)
+  }
+
+  function handleTokenSelected(token){
+    setSelectedToken(token);
+    setSteps(3);
   }
   return (
-    <section className="w-[600px] gap-y-2 h-full flex flex-col justify-stretch items-center">
-      Choose Tokens:
+    <section className={`w-[600px] gap-y-2 h-full flex flex-col ${loading ? "justify-center" : "justify-stretch"} items-center`}>
+      {loading && <span className="loading loading-spinner loading-lg"></span>}
       {tokenList.map((token) => {
         return (
           <div
             key={token.contractAddress}
-            className="grid grid-cols-[40px,70px,auto,auto] content-center w-full h-[60px] px-3 rounded-2xl gap-x-2 bg-gradient-to-r from-sky-500 to-indigo-500"
+            className="grid grid-cols-[40px,70px,auto,auto] content-center w-full h-[60px] px-3 rounded-2xl gap-x-2 bg-gradient-to-r from-sky-500 to-indigo-500 hover:from-sky-700 hover:to-indigo-700 cursor-pointer"
+            onClick={()=>handleTokenSelected(token)}
           >
             <p className="rounded-full flex justify-center items-center h-[40px] w-[40px] bg-white border-2">
               {token.symbol.substring(0, 1).toUpperCase()}
@@ -38,12 +46,6 @@ const ChooseToken = () => {
             <p className="flex items-center overflow-ellipsis">
               {token.balance}
             </p>
-            {token.balance > 0 && (
-              <input
-                type="checkbox"
-                className="self-center w-4 h-4 justify-self-end"
-              />
-            )}
           </div>
         );
       })}
