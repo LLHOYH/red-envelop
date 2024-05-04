@@ -4,7 +4,7 @@ import { Alchemy, Network, Utils } from "alchemy-sdk";
 import { useAccount } from "wagmi";
 import { useEffect, useState } from "react";
 
-const SetAmount = ({ setSteps, selectedToken, numOfEnvelopes,createEnvelope }) => {
+const SetAmount = ({ setSteps, selectedToken, numOfEnvelopes,createEnvelope, tokenApproved }) => {
   const account = useAccount();
   const [loading, setLoading] = useState(false);
   const [totalAmount, setTotalAmount] = useState("");
@@ -60,7 +60,7 @@ const SetAmount = ({ setSteps, selectedToken, numOfEnvelopes,createEnvelope }) =
         className={`w-[150px] h-[50px] rounded-md border cursor-pointer bg-sky-400 hover:bg-sky-500`}
           onClick={()=>createEnvelope(totalAmount)}
       >
-        Create Envelope
+        {tokenApproved ? "Create Envelop" : "Approve Token" }
       </button>
     </section>
   );

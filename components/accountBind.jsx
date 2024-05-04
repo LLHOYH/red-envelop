@@ -4,7 +4,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { IDKitWidget, VerificationLevel } from "@worldcoin/idkit";
-import { WalletButton } from '@rainbow-me/rainbowkit';
+import { WalletButton } from "@rainbow-me/rainbowkit";
 
 const AccountBind = ({ accountBinded, setAccountBinded }) => {
   const [xId, setXId] = useState("");
@@ -12,23 +12,25 @@ const AccountBind = ({ accountBinded, setAccountBinded }) => {
 
   const dummyAddress = {
     Lloyd: "0xA552c195A6eEC742B61042531fb92732F8A91D6b",
-    Dev2:"0x7030A91c6b4dC233F775260A04D4B3173B090154",
-    John: "0x162bCDeEf90181676BDC0a247A1954666F8a2815",
-    Seliina: "0x262bCDeEf90181676BDC0a247A1954666F8a2816",
-    Christina: "0x362bCDeEf90181676BDC0a247A1954666F8a2817",
-    Beauti: "0x462bCDeEf90181676BDC0a247A1954666F8a2818",
-    Lily: "0x562bCDeEf90181676BDC0a247A1954666F8a2818",
-    Angel: "0x662bCDeEf90181676BDC0a247A1954666F8a2818",
-    Min: "0x762bCDeEf90181676BDC0a247A1954666F8a2818",
-    Tok: "0x862bCDeEf90181676BDC0a247A1954666F8a2818",
-    Sydney: "0x962bCDeEf90181676BDC0a247A1954666F8a2818",
+    // Dev2:"0x7030A91c6b4dC233F775260A04D4B3173B090154",
+    John: "0xa8F5519a8213884B7c78A7B9E47a2C75cF8995eE",
+    Seliina: "0xE3a463d743F762D538031BAD3f1E748BB41f96ec",
+    Christina: "0x101591aca5aD4B79905e9FF05FBFF631304e4Be9",
+    Beauti: "0x23651284561f0a4709372214AAbE766A0240B536",
+    Lily: "0x5408DCaaa2b463fDA6DF2992950Da70F1F5e17b0",
   };
 
   function insertDummyAddress() {
     localStorage.setItem("allAccountsDict", JSON.stringify(dummyAddress));
   }
+  function getAllAccounts() {
+    const allAccountsDict = localStorage.getItem("allAccountsDict");
+    return allAccountsDict;
+  }
+
   useEffect(() => {
-    // insertDummyAddress();
+    let allAccountsDict = JSON.parse(getAllAccounts());
+    if (!allAccountsDict) insertDummyAddress();
     checkIfAccountBinded();
 
     return () => {
@@ -54,7 +56,7 @@ const AccountBind = ({ accountBinded, setAccountBinded }) => {
   }
 
   function handleBindTwitter() {
-    setXId("li_longhao");
+    setXId("Franky");
   }
 
   function handleBindAccount() {
@@ -103,7 +105,10 @@ const AccountBind = ({ accountBinded, setAccountBinded }) => {
           <h2 className="text-3xl font-bold">Bind your account</h2>
           <p>Step 1: Connect Twitter</p>
           <div className="flex items-center justify-start">
-            <button className="text-white bg-black btn" onClick={handleBindTwitter}>
+            <button
+              className="text-white bg-black btn"
+              onClick={handleBindTwitter}
+            >
               Connect Twitter
             </button>
             <input

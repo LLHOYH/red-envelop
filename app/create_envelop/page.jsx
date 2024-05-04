@@ -23,6 +23,11 @@ const CreateEnvelop = () => {
   const [yourFollowers, setYourFollowers] = useState([]);
   const [targetAddresses, setTargetAddresses] = useState([]);
   const [selectedToken, setSelectedToken] = useState({});
+  const [totalAmount, setTotalAmount] = useState(0);
+  const [tokenApproved, setTokenApproved] = useState(false);
+  const [merkleRoot, setMerkleRoot] = useState("");
+  const [hashHexProof,setHashHexProof] = useState(null);
+  const [targetAmount, setTargetAmount] =useState(0);
   const {
     data: hash,
     error: cError,
@@ -30,8 +35,15 @@ const CreateEnvelop = () => {
     writeContract,
   } = useWriteContract();
 
+  const {
+    data: approvalHash,
+    error: aError,
+    isPending: aPending,
+    writeContract: writeContractApproval,
+  } = useWriteContract();
+
   const contractAddr = {
-    baseSepolia: "0x8b3aC863fbD4F1dc4ce19004a34449E9d1479D8C",
+    baseSepolia: "0x3407eaB00a4fa31F0f4f8F5152BA8F7C13A00970",
   };
 
   const { isLoading: isConfirming, isSuccess: isConfirmed } =
@@ -45,7 +57,34 @@ const CreateEnvelop = () => {
 
   useEffect(() => {
     console.log("hash changed", hash);
+    if (hash) {
+      let envelope = {
+        owner: account.address,
+        totalAmount,
+        erc20token: selectedToken.contractAddress,
+        merkleRoot,
+        hashHexProof,
+        targetAmount
+      };
+      let envelopes = getEnvelopesFromStorage();
+      let envelopeId = 0;
+      if (envelopes.length !== 0)
+        envelopeId = envelopes[envelopes.length - 1].envelopeId + 1;
+
+      envelope = { ...envelope, envelopeId };
+      console.log(envelope);
+
+      envelopes.push(envelope);
+      console.log(envelopes);
+      setEnvelopes(envelopes);
+    }
   }, [hash]);
+
+  useEffect(() => {
+    if (approvalHash) {
+      setTokenApproved(true);
+    }
+  }, [approvalHash]);
 
   useEffect(() => {
     console.log("error ", cError);
@@ -69,43 +108,52 @@ const CreateEnvelop = () => {
     return allAccountsDict;
   }
 
-  async function createEnvelope(totalAmount) {
+  function createEnvelope(totalAmount) {
     // createContract(targetAddresses, totalAmount, selectedToken.contractAddress);
 
     const envelopeList = generateEachAmount(totalAmount, targetAddresses);
-    const merkleTree = generateMerkleTree(envelopeList);
-    // const startTime = Math.floor(Date.now() / 1000); //currenttime in seconds
+    const {rootHash, hashHexProof,targetAmount} = generateMerkleTree(envelopeList);
     const duration = 3 * 24 * 60 * 60; // 3 days, in seconds
 
-    setApprovalOnERC20(totalAmount);
+    if (!tokenApproved) setApprovalOnERC20(totalAmount);
+    else {
+      writeContract({
+        address: contractAddr.baseSepolia,
+        abi,
+        functionName: "createRedPacket",
+        args: [
+          rootHash,
+          totalAmount*100,
+          duration,
+          selectedToken.contractAddress,
+        ],
+        chainId: baseSepolia.id,
+      });
+    }
 
-    await writeContract({
-      address: contractAddr.baseSepolia,
-      abi,
-      functionName: "createRedPacket",
-      args: [
-        "0x" + merkleTree.getRoot().toString("hex"),
-        totalAmount,
-        // startTime,
-        duration,
-        selectedToken.contractAddress,
-      ],
-      chainId: baseSepolia.id,
-    });
+    setTotalAmount(() => totalAmount);
+    setMerkleRoot(() => rootHash);
+    setHashHexProof(()=>hashHexProof);
+    setTargetAmount(()=>targetAmount)
   }
 
-  async function setApprovalOnERC20(totalAmount) {
-    await writeContract({
+  function setApprovalOnERC20(totalAmount) {
+    writeContractApproval({
       address: selectedToken.contractAddress,
       abi: erc20abi,
       functionName: "approve",
-      args: [contractAddr.baseSepolia, totalAmount],
+      args: [contractAddr.baseSepolia, totalAmount*100],
       chainId: baseSepolia.id,
     });
   }
 
-  function onEnvelopeCreated() {
-    
+  function getEnvelopesFromStorage() {
+    const envelope = JSON.parse(localStorage.getItem("envelopes"));
+    return envelope || [];
+  }
+
+  function setEnvelopes(envelopes) {
+    localStorage.setItem("envelopes", JSON.stringify(envelopes));
   }
 
   return (
@@ -150,6 +198,7 @@ const CreateEnvelop = () => {
                 selectedToken={selectedToken}
                 numOfEnvelopes={targetAddresses.length}
                 createEnvelope={createEnvelope}
+                tokenApproved={tokenApproved}
               />
             </>
           )}

@@ -3,7 +3,7 @@ import { abi } from "./abi";
 import { generateEachAmount, generateMerkleTree } from "./MerkleTree";
 
 const contractAddr = {
-  baseSepolia: "0x8b3aC863fbD4F1dc4ce19004a34449E9d1479D8C",
+  baseSepolia: "0xe6b2EDD6D0Bcf772174Fa91BdB8D420d761c5270",
 };
 
 
