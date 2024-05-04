@@ -138,7 +138,7 @@ const AccountBind = ({ accountBinded, setAccountBinded }) => {
             )}
           </IDKitWidget>
 
-          <p>Step 2: Connect Wallet</p>
+          <p>Step 3: Connect Wallet</p>
           {account.address && (
             <input
               placeholder="0xwallet_address"
